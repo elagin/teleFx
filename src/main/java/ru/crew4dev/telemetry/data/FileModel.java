@@ -18,7 +18,7 @@ public class FileModel {
         this.name = new SimpleStringProperty(name);
         this.resolution = new SimpleStringProperty("");
         this.pos = new SimpleStringProperty("");
-        this.fnumber = new SimpleStringProperty("F");
+        this.fnumber = new SimpleStringProperty("");
         this.size = new SimpleLongProperty(size);
     }
 
@@ -54,11 +54,11 @@ public class FileModel {
         this.pos.set(pos);
     }
 
-    public String getfNumber() {
+    public String getFnumber() {
         return fnumber.get();
     }
 
-    public void setfNumber(String fnumber) {
+    public void setFnumber(String fnumber) {
         this.fnumber.set(fnumber);
     }
 

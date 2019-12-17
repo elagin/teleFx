@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ru.crew4dev.telemetry.data.FileModel;
 
@@ -19,25 +20,28 @@ import static ru.crew4dev.telemetry.Process.work;
 public class MainController implements Initializable {
 
     @FXML
+    private TextField folderName;
+
+    @FXML
     private TableView<FileModel> tbData;
 
     @FXML
-    public TableColumn<FileModel, Long> iso;
+    public TableColumn<Object, Object> iso;
 
     @FXML
-    public TableColumn<FileModel, String> name;
+    public TableColumn<Object, Object> name;
 
     @FXML
-    public TableColumn<FileModel, String> resolution;
+    public TableColumn<Object, Object> resolution;
 
     @FXML
-    public TableColumn<FileModel, String> pos;
+    public TableColumn<Object, Object> pos;
 
     @FXML
-    public TableColumn<FileModel, String> fnumber;
+    public TableColumn<Object, Object> fnumber;
 
     @FXML
-    public TableColumn<FileModel, Long> size;
+    public TableColumn<Object, Object> size;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -48,6 +52,7 @@ public class MainController implements Initializable {
         pos.setCellValueFactory(new PropertyValueFactory<>("pos"));
         fnumber.setCellValueFactory(new PropertyValueFactory<>("fnumber"));
         size.setCellValueFactory(new PropertyValueFactory<>("size"));
+        folderName.setText("d:/VIDEO/fly/DCIM/100/");
         //add your data to the table here.
         //tbData.setItems(fileModels);
         load();
@@ -59,7 +64,7 @@ public class MainController implements Initializable {
         List<String> result = new ArrayList<>();
         for (final File f : folder.listFiles()) {
             if (f.isFile()) {
-                if (f.getName().matches(pattern)) {
+                if (f.getName().toLowerCase().matches(pattern)) {
                     result.add(f.getAbsolutePath());
                 }
             }
@@ -69,7 +74,7 @@ public class MainController implements Initializable {
 
     private void load() {
         ObservableList<FileModel> data = tbData.getItems();
-        List<String> files = search("c:/");
+        List<String> files = search(folderName.getText());
         for (String file : files) {
             data.add(work(file));
         }

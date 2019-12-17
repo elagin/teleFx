@@ -85,7 +85,7 @@ public class Process {
                             result.setIso(Integer.valueOf(tag.getDescription()));
                             //System.out.println();
                         } else if (tag.getTagName().equals(F_NUMBER)) {
-                            result.setfNumber(tag.getDescription());
+                            result.setFnumber(tag.getDescription());
                         }
                         //GPS Longitude Ref
                         //[GPS] GPS Longitude - 37° 35' 21,88"
