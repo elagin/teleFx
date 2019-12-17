@@ -3,10 +3,12 @@ package ru.crew4dev.telemetry.controller;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
 import ru.crew4dev.telemetry.data.FileModel;
 
 import java.io.File;
@@ -14,13 +16,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import static ru.crew4dev.telemetry.Process.work;
 
 public class MainController implements Initializable {
 
+    private Preferences prefs;
+
+    final String PREF_FOLDER_NAME = "folderName";
+
     @FXML
     private TextField folderName;
+
+    @FXML
+    private Button buttonBrowse;
 
     @FXML
     private TableView<FileModel> tbData;
@@ -60,20 +70,22 @@ public class MainController implements Initializable {
         size.setCellValueFactory(new PropertyValueFactory<>("size"));
         exposure.setCellValueFactory(new PropertyValueFactory<>("exposure"));
         altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
-        folderName.setText("d:/VIDEO/fly/DCIM/100/");
-        //add your data to the table here.
-        //tbData.setItems(fileModels);
+        prefs = Preferences.userNodeForPackage(ru.crew4dev.telemetry.App.class);
+        String folder = prefs.get(PREF_FOLDER_NAME, "");
+        folderName.setText(folder);
         load();
     }
 
     public List<String> search(String folderName) {
-        final String pattern = ".*\\.jpg";
-        final File folder = new File(folderName);
         List<String> result = new ArrayList<>();
-        for (final File f : folder.listFiles()) {
-            if (f.isFile()) {
-                if (f.getName().toLowerCase().matches(pattern)) {
-                    result.add(f.getAbsolutePath());
+        if (!folderName.isEmpty()) {
+            final String pattern = ".*\\.jpg";
+            final File folder = new File(folderName);
+            for (final File f : folder.listFiles()) {
+                if (f.isFile()) {
+                    if (f.getName().toLowerCase().matches(pattern)) {
+                        result.add(f.getAbsolutePath());
+                    }
                 }
             }
         }
@@ -83,6 +95,9 @@ public class MainController implements Initializable {
     private void load() {
         ObservableList<FileModel> data = tbData.getItems();
         data.removeAll(data);
+
+        // Set the value of the preference
+        prefs.put(PREF_FOLDER_NAME, folderName.getText());
         List<String> files = search(folderName.getText());
         for (String file : files) {
             data.add(work(file));
@@ -92,5 +107,18 @@ public class MainController implements Initializable {
     @FXML
     public void onClickMethod() {
         load();
+    }
+
+    @FXML
+    public void onClickBrowse() {
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("JavaFX Projects");
+        File defaultDirectory = new File(prefs.get(PREF_FOLDER_NAME, ""));
+        chooser.setInitialDirectory(defaultDirectory);
+        File selectedDirectory = chooser.showDialog(buttonBrowse.getScene().getWindow());
+        if (selectedDirectory != null) {
+            prefs.put(PREF_FOLDER_NAME, selectedDirectory.getAbsolutePath());
+            folderName.setText(selectedDirectory.getAbsolutePath());
+        }
     }
 }
