@@ -14,7 +14,9 @@ import ru.crew4dev.telemetry.data.FileModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Process {
 
@@ -38,12 +40,8 @@ public class Process {
     }
 
     public static FileModel work(String name) {
-        //File file = new File("d:/VIDEO/fly/DCIM/100/IMG_20191212_010007_0008.JPG");
-        //File file = new File("d:/VIDEO/fly/DCIM/100/VID_20191215_150210_0009.MP4");
-        //File file = new File("d:/VIDEO/viofo/Movie/20191213211134_000008.MP4");
-        //File file = new File("d:/VIDEO/viofo/Photo/20191214113615_000023.JPG");
         File file = new File(name);
-
+        System.out.println(name);
         // There are multiple ways to get a Metadata object for a file
 
         //
@@ -66,72 +64,43 @@ public class Process {
                 //
                 for (Tag tag : directory.getTags()) {
                     if (tag.getDirectoryName().equals(DIR_JPEG)) {
-                        //System.out.println(tag);
                         if (tag.getTagName().equals(HEIGHT)) {
                             String desc = tag.getDescription();
                             if (resolution.length() > 0)
                                 resolution.append("x");
                             resolution.append(getValue(desc));
-                            //result.setResolution(desc);
                         } else if (tag.getTagName().equals(WIDTH)) {
                             String desc = tag.getDescription();
                             if (resolution.length() > 0)
                                 resolution.append("x");
                             resolution.append(getValue(desc));
-                        } else {
-                            System.out.println(tag.toString());
                         }
                     }
                     if (tag.getDirectoryName().equals(EXIF_SUBIFD)) {
                         if (tag.getTagName().equals(ISO)) {
                             result.setIso(Integer.valueOf(tag.getDescription()));
-                            //System.out.println();
                         } else if (tag.getTagName().equals(F_NUMBER)) {
                             result.setFnumber(tag.getDescription());
                         } else if (tag.getTagName().equals(EXPOSURE)) {
                             result.setExposure(tag.getDescription());
                         }
-
-                        //    [Exif SubIFD] Exposure Time - 1/200 sec
-                        //GPS Longitude Ref
-                        //[GPS] GPS Longitude - 37° 35' 21,88"
-                        // if (tag.getTagName().equals(ISO)) { GPS Latitude Ref - tag.getDescription() N
-                        // if (tag.getTagName().equals(ISO)) { GPS Latitude - 55° 45' 20,01"
-
                     }
                     if (tag.getDirectoryName().equals(GPS)) {
                         if (tag.getTagName().equals(LONGITUDE)) {
                             lon = tag.getDescription();
-                            //System.out.println(tag.toString());
-                            //private static final String LONGITUDE = "Longitude";
-                            //private static final String LATITUDE = "Latitude";
                         } else if (tag.getTagName().equals(LATITUDE)) {
                             lat = tag.getDescription();
                         } else if (tag.getTagName().equals(ALTITUDE)) {
                             result.setAltitude(tag.getDescription());
                         }
-                        //
-                        //    //[GPS] GPS Altitude - 96,06 metres
-
-                    } else {
-                        System.out.println(tag.toString());
                     }
                 }
-                //result.setResolution(resolution.toString());
-                //
-                // Each Directory may also contain error messages
-                //
-//                for (String error : directory.getErrors()) {
-//                    System.err.println("ERROR: " + error);
-//                }
             }
-            System.out.println(resolution.toString());
             if (!lat.isEmpty() && !lon.isEmpty())
                 result.setPos(lat + "x" + lon);
             result.setResolution(resolution.toString());
-            print(metadata, "Using ImageMetadataReader");
-        } catch (
-                ImageProcessingException | IOException e) {
+            result.setMetadata(print(metadata, "Using ImageMetadataReader"));
+        } catch (ImageProcessingException | IOException e) {
             print(e);
         }
 
@@ -147,9 +116,8 @@ public class Process {
 
         try {
             Metadata metadata = JpegMetadataReader.readMetadata(file);
-            print(metadata, "Using JpegMetadataReader");
-        } catch (
-                JpegProcessingException | IOException e) {
+            result.addMetadata(print(metadata, "Using JpegMetadataReader"));
+        } catch (JpegProcessingException | IOException e) {
             print(e);
         }
 
@@ -166,7 +134,7 @@ public class Process {
             // We are only interested in handling
             Iterable<JpegSegmentMetadataReader> readers = Arrays.asList(new ExifReader(), new IptcReader());
             Metadata metadata = JpegMetadataReader.readMetadata(file, readers);
-            print(metadata, "Using JpegMetadataReader for Exif and IPTC only");
+            result.addMetadata(print(metadata, "Using JpegMetadataReader for Exif and IPTC only"));
         } catch (JpegProcessingException | IOException e) {
             print(e);
         }
@@ -176,22 +144,17 @@ public class Process {
     /**
      * Write all extracted values to stdout.
      */
-    private static void print(Metadata metadata, String method) {
-        System.out.println();
-        System.out.println("-------------------------------------------------");
-        System.out.print(' ');
-        System.out.print(method);
-        System.out.println("-------------------------------------------------");
-        System.out.println();
+    private static List<String> print(Metadata metadata, String method) {
         //
         // A Metadata object contains multiple Directory objects
         //
+        List<String> result = new ArrayList<>();
         for (Directory directory : metadata.getDirectories()) {
             //
             // Each Directory stores values in Tag objects
             //
             for (Tag tag : directory.getTags()) {
-                System.out.println(tag);
+                result.add(tag.toString());
             }
             //
             // Each Directory may also contain error messages
@@ -200,6 +163,7 @@ public class Process {
                 System.err.println("ERROR: " + error);
             }
         }
+        return result;
     }
 
     private static void print(Exception exception) {

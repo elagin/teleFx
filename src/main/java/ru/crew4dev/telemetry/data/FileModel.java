@@ -4,6 +4,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FileModel {
 
     private SimpleIntegerProperty iso;
@@ -14,14 +17,7 @@ public class FileModel {
     private SimpleStringProperty exposure;
     private SimpleStringProperty altitude;
     private SimpleLongProperty size;
-
-    public String getAltitude() {
-        return altitude.get();
-    }
-
-    public void setAltitude(String altitude) {
-        this.altitude.set(altitude);
-    }
+    private List<String> metadata;
 
     public FileModel(String name, Long size) {
         this.iso = new SimpleIntegerProperty(0);
@@ -32,7 +28,44 @@ public class FileModel {
         this.exposure = new SimpleStringProperty("");
         this.altitude = new SimpleStringProperty("");
         this.size = new SimpleLongProperty(size);
+        this.metadata = new ArrayList<>();
     }
+
+    public String getAltitude() {
+        return altitude.get();
+    }
+
+    public void setAltitude(String altitude) {
+        this.altitude.set(altitude);
+    }
+
+    public List<String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(List<String> metadata) {
+        this.metadata = metadata;
+    }
+
+    public void addMetadata(List<String> metadata) {
+        System.out.println("Old: " + this.metadata.size() + " New: " + metadata.size());
+        List<String> toRemove = new ArrayList<>();
+
+        for (String itemOld : this.metadata) {
+            for (String itemNew : metadata) {
+                if (itemNew.equals(itemOld))
+                    toRemove.add(itemNew);
+            }
+        }
+
+        metadata.removeAll(toRemove);
+        if(!metadata.isEmpty()) {
+            System.out.println("New now: " + metadata.size());
+            this.metadata.addAll(metadata);
+            System.out.println("Old now: " + this.metadata.size());
+        }
+    }
+
 
     public String getExposure() {
         return exposure.get();

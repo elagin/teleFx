@@ -30,6 +30,8 @@
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>
             </TableView>
+            <ListView fx:id="metaData" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
+                      AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10"/>
         </VBox>
     </children>
 </AnchorPane>
