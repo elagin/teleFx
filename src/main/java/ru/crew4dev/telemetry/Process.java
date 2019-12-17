@@ -25,10 +25,12 @@ public class Process {
     private static final String EXIF_SUBIFD = "Exif SubIFD";
     private static final String ISO = "ISO Speed Ratings";
     private static final String F_NUMBER = "F-Number";
+    private static final String EXPOSURE = "Exposure Time";
 
     private static final String GPS = "GPS";
     private static final String LONGITUDE = "GPS Longitude";
     private static final String LATITUDE = "GPS Latitude";
+    private static final String ALTITUDE = "GPS Altitude";
 
     public static String getValue(String data) {
         int pos = data.indexOf(" ");
@@ -86,7 +88,11 @@ public class Process {
                             //System.out.println();
                         } else if (tag.getTagName().equals(F_NUMBER)) {
                             result.setFnumber(tag.getDescription());
+                        } else if (tag.getTagName().equals(EXPOSURE)) {
+                            result.setExposure(tag.getDescription());
                         }
+
+                        //    [Exif SubIFD] Exposure Time - 1/200 sec
                         //GPS Longitude Ref
                         //[GPS] GPS Longitude - 37° 35' 21,88"
                         // if (tag.getTagName().equals(ISO)) { GPS Latitude Ref - tag.getDescription() N
@@ -101,7 +107,11 @@ public class Process {
                             //private static final String LATITUDE = "Latitude";
                         } else if (tag.getTagName().equals(LATITUDE)) {
                             lat = tag.getDescription();
+                        } else if (tag.getTagName().equals(ALTITUDE)) {
+                            result.setAltitude(tag.getDescription());
                         }
+                        //
+                        //    //[GPS] GPS Altitude - 96,06 metres
 
                     } else {
                         System.out.println(tag.toString());
@@ -116,8 +126,8 @@ public class Process {
 //                }
             }
             System.out.println(resolution.toString());
-            if(!lat.isEmpty() && !lon.isEmpty())
-                result.setPos( lat + "x" +  lon);
+            if (!lat.isEmpty() && !lon.isEmpty())
+                result.setPos(lat + "x" + lon);
             result.setResolution(resolution.toString());
             print(metadata, "Using ImageMetadataReader");
         } catch (

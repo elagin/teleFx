@@ -11,7 +11,17 @@ public class FileModel {
     private SimpleStringProperty resolution;
     private SimpleStringProperty pos;
     private SimpleStringProperty fnumber;
+    private SimpleStringProperty exposure;
+    private SimpleStringProperty altitude;
     private SimpleLongProperty size;
+
+    public String getAltitude() {
+        return altitude.get();
+    }
+
+    public void setAltitude(String altitude) {
+        this.altitude.set(altitude);
+    }
 
     public FileModel(String name, Long size) {
         this.iso = new SimpleIntegerProperty(0);
@@ -19,7 +29,17 @@ public class FileModel {
         this.resolution = new SimpleStringProperty("");
         this.pos = new SimpleStringProperty("");
         this.fnumber = new SimpleStringProperty("");
+        this.exposure = new SimpleStringProperty("");
+        this.altitude = new SimpleStringProperty("");
         this.size = new SimpleLongProperty(size);
+    }
+
+    public String getExposure() {
+        return exposure.get();
+    }
+
+    public void setExposure(String exposure) {
+        this.exposure.set(exposure);
     }
 
     public int getIso() {

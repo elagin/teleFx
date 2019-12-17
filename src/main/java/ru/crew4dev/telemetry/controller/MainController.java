@@ -43,6 +43,12 @@ public class MainController implements Initializable {
     @FXML
     public TableColumn<Object, Object> size;
 
+    @FXML
+    public TableColumn<Object, Object> exposure;
+
+    @FXML
+    public TableColumn<Object, Object> altitude;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //make sure the property value factory should be exactly same as the e.g getIso from your model class
@@ -52,6 +58,8 @@ public class MainController implements Initializable {
         pos.setCellValueFactory(new PropertyValueFactory<>("pos"));
         fnumber.setCellValueFactory(new PropertyValueFactory<>("fnumber"));
         size.setCellValueFactory(new PropertyValueFactory<>("size"));
+        exposure.setCellValueFactory(new PropertyValueFactory<>("exposure"));
+        altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
         folderName.setText("d:/VIDEO/fly/DCIM/100/");
         //add your data to the table here.
         //tbData.setItems(fileModels);
@@ -74,6 +82,7 @@ public class MainController implements Initializable {
 
     private void load() {
         ObservableList<FileModel> data = tbData.getItems();
+        data.removeAll(data);
         List<String> files = search(folderName.getText());
         for (String file : files) {
             data.add(work(file));
@@ -82,6 +91,6 @@ public class MainController implements Initializable {
 
     @FXML
     public void onClickMethod() {
-        System.out.println();
+        load();
     }
 }

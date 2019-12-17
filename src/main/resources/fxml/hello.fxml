@@ -25,6 +25,8 @@
                     <TableColumn fx:id="resolution" prefWidth="20.0" text="resolution" />
                     <TableColumn fx:id="iso" prefWidth="20.0" text="ISO" />
                     <TableColumn fx:id="pos" prefWidth="20.0" text="pos" />
+                    <TableColumn fx:id="altitude" prefWidth="20.0" text="altitude" />
+                    <TableColumn fx:id="exposure" prefWidth="20.0" text="exposure" />
                     <TableColumn fx:id="fnumber" prefWidth="20.0" text="fnumber" />
                     <TableColumn fx:id="size" prefWidth="20.0" text="size" />
                 </columns>
