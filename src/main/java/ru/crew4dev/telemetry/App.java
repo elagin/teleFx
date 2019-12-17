@@ -3,6 +3,7 @@ package ru.crew4dev.telemetry;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
@@ -18,7 +19,7 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         String fxmlFile = "/fxml/hello.fxml";
         FXMLLoader loader = new FXMLLoader();
-        Parent root = loader.load(getClass().getResourceAsStream(fxmlFile));
+        AnchorPane root = loader.load(getClass().getResourceAsStream(fxmlFile));
         stage.setTitle("JavaFX and Maven");
         stage.setScene(new Scene(root));
         stage.show();
