@@ -20,7 +20,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>2.0</version>
                 <configuration>
-                    <mainClass>ru.crew4dev.telemetry.Application</mainClass>
+                    <mainClass>ru.crew4dev.telemetry.App</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -40,7 +40,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>ru.crew4dev.telemetry.Application</mainClass>
+                            <mainClass>ru.crew4dev.telemetry.App</mainClass>
                         </manifest>
                     </archive>
                     <appendAssemblyId>false</appendAssemblyId>

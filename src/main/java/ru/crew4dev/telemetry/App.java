@@ -1,12 +1,17 @@
 package ru.crew4dev.telemetry;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
 
-public class Application {
+import static javafx.application.Application.launch;
+
+
+public class App extends Application {
     public static void main(String[] args) throws Exception {
         launch(args);
     }
