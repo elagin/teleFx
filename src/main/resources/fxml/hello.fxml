@@ -17,14 +17,14 @@
             </HBox>
             <TableView fx:id="tbData" prefWidth="960.0" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
                 <columns>
-                    <TableColumn fx:id="name" prefWidth="20.0" text="name" />
-                    <TableColumn fx:id="resolution" prefWidth="20.0" text="resolution" />
-                    <TableColumn fx:id="iso" prefWidth="20.0" text="ISO" />
-                    <TableColumn fx:id="pos" prefWidth="20.0" text="pos" />
-                    <TableColumn fx:id="altitude" prefWidth="20.0" text="altitude" />
-                    <TableColumn fx:id="exposure" prefWidth="20.0" text="exposure" />
-                    <TableColumn fx:id="fnumber" prefWidth="20.0" text="fnumber" />
-                    <TableColumn fx:id="size" prefWidth="20.0" text="size" />
+                    <TableColumn fx:id="name" text="name"/>
+                    <TableColumn fx:id="resolution" text="resolution"/>
+                    <TableColumn fx:id="iso" text="ISO"/>
+                    <TableColumn fx:id="pos" text="pos"/>
+                    <TableColumn fx:id="altitude" text="altitude"/>
+                    <TableColumn fx:id="exposure" text="exposure"/>
+                    <TableColumn fx:id="fnumber" text="fnumber"/>
+                    <TableColumn fx:id="size" text="size"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

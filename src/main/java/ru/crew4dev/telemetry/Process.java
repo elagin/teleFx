@@ -81,6 +81,14 @@ public class Process {
         return result;
     }
 
+    private static Double getDiv(String value) {
+        String[] divs = value.split("/");
+        if (divs.length == 2) {
+            return (double) Integer.valueOf(divs[0]) / Integer.valueOf(divs[1]);
+        }
+        return null;
+    }
+
     private static void parseMetadata(Metadata metadata, FileModel result) {
         StringBuilder resolution = new StringBuilder();
         Double lat = null;
@@ -90,7 +98,17 @@ public class Process {
         if (directoryExifSub != null) {
             result.setIso(Integer.valueOf(directoryExifSub.getString(ExifSubIFDDirectory.TAG_ISO_EQUIVALENT)));
             result.setFnumber(directoryExifSub.getString(ExifSubIFDDirectory.TAG_FNUMBER));
-            result.setExposure(directoryExifSub.getString(ExifSubIFDDirectory.TAG_EXPOSURE_TIME));
+
+            String exposure = directoryExifSub.getString(ExifSubIFDDirectory.TAG_EXPOSURE_TIME);
+            if (exposure != null) {
+                String[] divs = exposure.split("/");
+                if (divs.length == 2 && divs[0].length() > 1) {
+                    Double dExp = (double) Integer.valueOf(divs[1]) / Integer.valueOf(divs[0]);
+                    result.setExposure("1/" + Math.round(dExp));
+                } else {
+                    result.setExposure(exposure);
+                }
+            }
 
             resolution.append(directoryExifSub.getString(ExifSubIFDDirectory.TAG_EXIF_IMAGE_WIDTH));
             resolution.append("x");
@@ -100,19 +118,17 @@ public class Process {
         GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
         if (gpsDirectory != null) {
             String altString = gpsDirectory.getString(GpsDirectory.TAG_ALTITUDE);
-            String[] divs = altString.split("/");
-            if (divs.length == 2) {
-                double alt = (double) Integer.valueOf(divs[0]) / Integer.valueOf(divs[1]);
-                result.setAltitude(String.valueOf(alt));
-            }
-
+            if (altString != null) {
+                Double alt = getDiv(altString);
+                if (alt != null)
+                    result.setAltitude(String.valueOf(alt));
 //            for (int i = GpsDirectory.TAG_VERSION_ID; i < GpsDirectory.TAG_H_POSITIONING_ERROR; i++) {
 //                String xx = gpsDirectory.getString(i);
 //                if (xx != null) {
 //                    System.out.println(i + " : " + xx);
 //                }
 //            }
-
+            }
             GeoLocation geoLocation = gpsDirectory.getGeoLocation();
             lat = geoLocation.getLatitude();
             lon = geoLocation.getLongitude();
