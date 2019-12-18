@@ -130,8 +130,10 @@ public class MainController implements Initializable {
     public void onClickBrowse() {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("JavaFX Projects");
-        File defaultDirectory = new File(prefs.get(PREF_FOLDER_NAME, ""));
-        chooser.setInitialDirectory(defaultDirectory);
+        String folder = prefs.get(PREF_FOLDER_NAME, "");
+        if (!folder.isEmpty()) {
+            chooser.setInitialDirectory(new File(folder));
+        }
         File selectedDirectory = chooser.showDialog(buttonBrowse.getScene().getWindow());
         if (selectedDirectory != null) {
             prefs.put(PREF_FOLDER_NAME, selectedDirectory.getAbsolutePath());
