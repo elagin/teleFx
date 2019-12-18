@@ -4,9 +4,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.crew4dev.telemetry.controller.MainController">
     <children>
-        <VBox layoutX="14.0" layoutY="5.0" spacing="20.0" style="-fx-background-color: #AAAAAA;" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+        <VBox layoutX="14.0" layoutY="5.0" spacing="5.0" style="-fx-background-color: #AAAAAA;" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
@@ -30,8 +31,12 @@
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>
             </TableView>
-            <ListView fx:id="metaData" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
-                      AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10"/>
+            <AnchorPane>
+            <HBox style="-fx-background-color: #119090" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                <ListView fx:id="metaData" prefWidth="600.0" />
+                <ImageView fx:id="imageView"/>
+            </HBox>
+            </AnchorPane>
         </VBox>
     </children>
 </AnchorPane>

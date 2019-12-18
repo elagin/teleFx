@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
@@ -35,6 +37,9 @@ public class MainController implements Initializable {
 
     @FXML
     private ListView metaData;
+
+    @FXML
+    private ImageView imageView;
 
     @FXML
     private TableView<FileModel> tbData;
@@ -86,6 +91,14 @@ public class MainController implements Initializable {
                     FileModel item = tbData.getItems().get(index);
                     ObservableList<String> oListMeta = FXCollections.observableArrayList(item.getMetadata());
                     metaData.setItems(oListMeta);
+                    File file = new File(prefs.get(PREF_FOLDER_NAME, "") + "/" + item.getName());
+                    Image image = new Image(file.toURI().toString());
+                    double factor = image.getWidth() / image.getHeight();
+                    imageView.setPreserveRatio(true);
+                    imageView.setSmooth(true);
+                    imageView.setCache(true);
+                    imageView.setFitWidth(300);
+                    imageView.setImage(image);
                 }
             }
         });
