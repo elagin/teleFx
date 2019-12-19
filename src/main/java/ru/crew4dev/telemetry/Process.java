@@ -8,6 +8,7 @@ import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
+import com.drew.metadata.MetadataException;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
@@ -104,8 +105,11 @@ public class Process {
         Directory directoryExifSub = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
         if (directoryExifSub != null) {
             result.setIso(Integer.parseInt(directoryExifSub.getString(ExifSubIFDDirectory.TAG_ISO_EQUIVALENT)));
+            Date creationTime = directoryExifSub.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+            if (creationTime != null) {
+                result.setCreationTime(creationTime.getTime());
+            }
             result.setFnumber(directoryExifSub.getString(ExifSubIFDDirectory.TAG_FNUMBER));
-
             String exposure = directoryExifSub.getString(ExifSubIFDDirectory.TAG_EXPOSURE_TIME);
             if (exposure != null) {
                 String[] divs = exposure.split("/");
@@ -125,18 +129,20 @@ public class Process {
 
         GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
         if (gpsDirectory != null) {
-            String altString = gpsDirectory.getString(GpsDirectory.TAG_ALTITUDE);
-            if (altString != null) {
-                Double alt = getDiv(altString);
-                if (alt != null)
+            try {
+                Double alt = gpsDirectory.getDouble(GpsDirectory.TAG_ALTITUDE);
+                if (alt != null) {
                     result.setAltitude(String.valueOf(alt));
+                }
+            } catch (MetadataException e) {
+                e.printStackTrace();
+            }
 //            for (int i = GpsDirectory.TAG_VERSION_ID; i < GpsDirectory.TAG_H_POSITIONING_ERROR; i++) {
 //                String xx = gpsDirectory.getString(i);
 //                if (xx != null) {
 //                    System.out.println(i + " : " + xx);
 //                }
 //            }
-            }
             GeoLocation geoLocation = gpsDirectory.getGeoLocation();
             if (geoLocation != null) {
                 Double lat = geoLocation.getLatitude();
@@ -152,6 +158,10 @@ public class Process {
         StringBuilder resolution = new StringBuilder();
         Directory directoryMp4 = metadata.getFirstDirectoryOfType(Mp4Directory.class);
         if (directoryMp4 != null) {
+            Date creationTime = directoryMp4.getDate(Mp4Directory.TAG_CREATION_TIME);
+            if (creationTime != null) {
+                result.setCreationTime(creationTime.getTime());
+            }
             final Integer seconds = directoryMp4.getInteger(Mp4Directory.TAG_DURATION_SECONDS);
             int p1 = seconds % 60;
             int p2 = seconds / 60;
@@ -166,7 +176,14 @@ public class Process {
             resolution.append("x");
             resolution.append(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_HEIGHT));
             result.setResolution(resolution.toString());
-            result.setFrameRate(Integer.parseInt(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_FRAME_RATE)));
+
+            try {
+                Double frameRate = mp4VideoDirectory.getDouble(Mp4VideoDirectory.TAG_FRAME_RATE);
+                if (frameRate != null)
+                    result.setFrameRate(frameRate);
+            } catch (MetadataException e) {
+                e.printStackTrace();
+            }
             //result.setFrameRate(Integer.parseInt(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_COMPRESSOR_NAME)));
             //System.out.println(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_COMPRESSOR_NAME));
             result.setCompressionType(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_COMPRESSION_TYPE));

@@ -49,6 +49,9 @@ public class MainController implements Initializable {
     public TableColumn<Object, Object> name;
 
     @FXML
+    public TableColumn<Object, Object> creationTime;
+
+    @FXML
     public TableColumn<Object, Object> size;
 
     @FXML
@@ -65,7 +68,6 @@ public class MainController implements Initializable {
     public TableColumn frameRate;
     public TableColumn compressionType;
     public TableColumn duration;
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -94,6 +96,7 @@ public class MainController implements Initializable {
         }
 
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        creationTime.setCellValueFactory(new PropertyValueFactory<>("creationTime"));
         resolution.setCellValueFactory(new PropertyValueFactory<>("resolution"));
         size.setCellValueFactory(new PropertyValueFactory<>("size"));
         prefs = Preferences.userNodeForPackage(ru.crew4dev.telemetry.App.class);
@@ -176,6 +179,7 @@ public class MainController implements Initializable {
         if (selectedDirectory != null) {
             prefs.put(PREF_FOLDER_NAME, selectedDirectory.getAbsolutePath());
             folderName.setText(selectedDirectory.getAbsolutePath());
+            load();
         }
     }
 }

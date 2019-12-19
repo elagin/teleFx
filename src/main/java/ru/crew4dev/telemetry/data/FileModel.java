@@ -1,10 +1,13 @@
 package ru.crew4dev.telemetry.data;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FileModel {
@@ -19,8 +22,8 @@ public class FileModel {
     private SimpleStringProperty exposure;
     private SimpleStringProperty altitude;
     private SimpleLongProperty size;
-
-    private SimpleIntegerProperty frameRate;
+    private SimpleLongProperty creationTime;
+    private SimpleDoubleProperty frameRate;
     private SimpleStringProperty compressionType;
     private SimpleStringProperty duration;
 
@@ -35,8 +38,22 @@ public class FileModel {
         this.compressionType = new SimpleStringProperty("");
         this.duration = new SimpleStringProperty("");
         this.size = new SimpleLongProperty(size);
-        this.frameRate = new SimpleIntegerProperty(0);
+        this.creationTime = new SimpleLongProperty();
+        this.frameRate = new SimpleDoubleProperty(0);
         this.metadata = new ArrayList<>();
+    }
+
+    public String getCreationTime() {
+        if (creationTime.get() > 0) {
+            Date date = new Date(creationTime.get());
+            SimpleDateFormat dt1 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            return dt1.format(date);
+        } else
+            return "";
+    }
+
+    public void setCreationTime(long creationTime) {
+        this.creationTime.set(creationTime);
     }
 
     public String getDuration() {
@@ -55,11 +72,11 @@ public class FileModel {
         this.compressionType.set(compressionType);
     }
 
-    public int getFrameRate() {
-        return frameRate.get();
+    public String getFrameRate() {
+        return String.format(String.format("%2.2f", frameRate.get()));
     }
 
-    public void setFrameRate(int frameRate) {
+    public void setFrameRate(double frameRate) {
         this.frameRate.set(frameRate);
     }
 
@@ -91,7 +108,7 @@ public class FileModel {
         }
 
         metadata.removeAll(toRemove);
-        if(!metadata.isEmpty()) {
+        if (!metadata.isEmpty()) {
             System.out.println("New now: " + metadata.size());
             this.metadata.addAll(metadata);
             System.out.println("Old now: " + this.metadata.size());

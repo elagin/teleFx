@@ -29,6 +29,7 @@
                 <TableColumn fx:id="name" text="name"/>
                 <TableColumn fx:id="resolution" text="resolution"/>
                 <TableColumn fx:id="size" text="size"/>
+                <TableColumn fx:id="creationTime" text="creationTime"/>
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
