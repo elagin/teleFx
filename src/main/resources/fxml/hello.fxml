@@ -15,45 +15,37 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
             prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.crew4dev.telemetry.controller.MainController">
-    <children>
-        <VBox spacing="5.0" style="-fx-background-color: #AAAAAA" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
-            <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-            </padding>
-            <HBox>
-                <TextField fx:id="folderName" layoutX="14.0" layoutY="137.0" prefHeight="26.0" prefWidth="503.0"/>
-                <Button fx:id="buttonBrowse" onAction="#onClickBrowse" text="Browse"/>
-                <Button fx:id="buttonStart" layoutX="595.0" layoutY="134.0" mnemonicParsing="false" onAction="#onClickMethod" text="Start"/>
-            </HBox>
-            <TableView fx:id="tbData">
-                <columns>
-                    <TableColumn fx:id="name" text="name"/>
-                    <TableColumn fx:id="resolution" text="resolution"/>
-                    <TableColumn fx:id="iso" text="ISO"/>
-                    <TableColumn fx:id="pos" text="pos"/>
-                    <TableColumn fx:id="altitude" text="altitude"/>
-                    <TableColumn fx:id="exposure" text="exposure"/>
-                    <TableColumn fx:id="fnumber" text="fnumber"/>
-                    <TableColumn fx:id="size" text="size"/>
-                </columns>
-                <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                </columnResizePolicy>
-            </TableView>
-            <SplitPane dividerPositions="0.8"  style="-fx-background-color: #123456">
-                <items>
-                    <AnchorPane>
-                        <children>
-                            <ListView fx:id="metaData" AnchorPane.leftAnchor="2" AnchorPane.rightAnchor="2" AnchorPane.topAnchor="2"/>
-                        </children>
-                    </AnchorPane>
-                    <AnchorPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                        <children>
-                            <ImageView fx:id="imageView"/>
-                        </children>
-                    </AnchorPane>
-                </items>
-            </SplitPane>
-        </VBox>
-    </children>
+    <VBox spacing="5.0" style="-fx-background-color: #AAAAAA" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <HBox>
+            <TextField fx:id="folderName" layoutX="14.0" layoutY="137.0" prefHeight="26.0" prefWidth="503.0"/>
+            <Button fx:id="buttonBrowse" onAction="#onClickBrowse" text="Browse"/>
+            <Button fx:id="buttonStart" layoutX="595.0" layoutY="134.0" mnemonicParsing="false" onAction="#onClickMethod" text="Start"/>
+        </HBox>
+        <TableView fx:id="tbData">
+            <columns>
+                <TableColumn fx:id="name" text="name"/>
+                <TableColumn fx:id="resolution" text="resolution"/>
+                <TableColumn fx:id="iso" text="ISO"/>
+                <TableColumn fx:id="pos" text="pos"/>
+                <TableColumn fx:id="altitude" text="altitude"/>
+                <TableColumn fx:id="exposure" text="exposure"/>
+                <TableColumn fx:id="fnumber" text="fnumber"/>
+                <TableColumn fx:id="size" text="size"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+        <SplitPane dividerPositions="0.8" style="-fx-background-color: #123456">
+            <AnchorPane>
+                <ListView fx:id="metaData" AnchorPane.leftAnchor="2" AnchorPane.rightAnchor="2" AnchorPane.topAnchor="2"/>
+            </AnchorPane>
+            <AnchorPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <ImageView fx:id="imageView"/>
+            </AnchorPane>
+        </SplitPane>
+    </VBox>
 </AnchorPane>

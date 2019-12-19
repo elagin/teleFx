@@ -84,26 +84,23 @@ public class Process {
     private static Double getDiv(String value) {
         String[] divs = value.split("/");
         if (divs.length == 2) {
-            return (double) Integer.valueOf(divs[0]) / Integer.valueOf(divs[1]);
+            return (double) Integer.parseInt(divs[0]) / Integer.parseInt(divs[1]);
         }
         return null;
     }
 
     private static void parseMetadata(Metadata metadata, FileModel result) {
         StringBuilder resolution = new StringBuilder();
-        Double lat = null;
-        Double lon = null;
-
         Directory directoryExifSub = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
         if (directoryExifSub != null) {
-            result.setIso(Integer.valueOf(directoryExifSub.getString(ExifSubIFDDirectory.TAG_ISO_EQUIVALENT)));
+            result.setIso(Integer.parseInt(directoryExifSub.getString(ExifSubIFDDirectory.TAG_ISO_EQUIVALENT)));
             result.setFnumber(directoryExifSub.getString(ExifSubIFDDirectory.TAG_FNUMBER));
 
             String exposure = directoryExifSub.getString(ExifSubIFDDirectory.TAG_EXPOSURE_TIME);
             if (exposure != null) {
                 String[] divs = exposure.split("/");
                 if (divs.length == 2 && divs[0].length() > 1) {
-                    Double dExp = (double) Integer.valueOf(divs[1]) / Integer.valueOf(divs[0]);
+                    Double dExp = (double) Integer.parseInt(divs[1]) / Integer.parseInt(divs[0]);
                     result.setExposure("1/" + Math.round(dExp));
                 } else {
                     result.setExposure(exposure);
@@ -130,12 +127,13 @@ public class Process {
 //            }
             }
             GeoLocation geoLocation = gpsDirectory.getGeoLocation();
-            lat = geoLocation.getLatitude();
-            lon = geoLocation.getLongitude();
+            if (geoLocation != null) {
+                Double lat = geoLocation.getLatitude();
+                Double lon = geoLocation.getLongitude();
+                result.setPos(lat + "x" + lon);
+            }
             //assertEquals(1277374641000L, gpsDirectory.getGpsDate().getTime());
         }
-        if (lat != null && lon != null)
-            result.setPos(lat + "x" + lon);
         result.setResolution(resolution.toString());
         result.setMetadata(print(metadata, "Using ImageMetadataReader"));
     }
