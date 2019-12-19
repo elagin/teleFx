@@ -1,8 +1,10 @@
 package ru.crew4dev.telemetry;
 
+import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.jpeg.JpegProcessingException;
 import com.drew.imaging.jpeg.JpegSegmentMetadataReader;
+import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
@@ -11,13 +13,13 @@ import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.drew.metadata.iptc.IptcReader;
+import com.drew.metadata.mp4.Mp4Directory;
+import com.drew.metadata.mp4.media.Mp4VideoDirectory;
 import ru.crew4dev.telemetry.data.FileModel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Process {
 
@@ -46,9 +48,17 @@ public class Process {
 
             try {
                 Metadata metadata = JpegMetadataReader.readMetadata(file);
-                parseMetadata(metadata, result);
+                parseImageMetadata(metadata, result);
                 //result.addMetadata(print(metadata, "Using JpegMetadataReader"));
             } catch (JpegProcessingException | IOException e) {
+                print(e);
+            }
+        } else if (name.toLowerCase().endsWith(".mp4")) {
+            try {
+                Metadata metadata = Mp4MetadataReader.readMetadata(file);
+                parseMovieMetadata(metadata, result);
+                //result.addMetadata(print(metadata, "Using JpegMetadataReader"));
+            } catch (ImageProcessingException | IOException e) {
                 print(e);
             }
         } else {
@@ -89,7 +99,7 @@ public class Process {
         return null;
     }
 
-    private static void parseMetadata(Metadata metadata, FileModel result) {
+    private static void parseImageMetadata(Metadata metadata, FileModel result) {
         StringBuilder resolution = new StringBuilder();
         Directory directoryExifSub = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
         if (directoryExifSub != null) {
@@ -110,6 +120,7 @@ public class Process {
             resolution.append(directoryExifSub.getString(ExifSubIFDDirectory.TAG_EXIF_IMAGE_WIDTH));
             resolution.append("x");
             resolution.append(directoryExifSub.getString(ExifSubIFDDirectory.TAG_EXIF_IMAGE_HEIGHT));
+            result.setResolution(resolution.toString());
         }
 
         GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
@@ -134,8 +145,33 @@ public class Process {
             }
             //assertEquals(1277374641000L, gpsDirectory.getGpsDate().getTime());
         }
-        result.setResolution(resolution.toString());
         result.setMetadata(print(metadata, "Using ImageMetadataReader"));
+    }
+
+    private static void parseMovieMetadata(Metadata metadata, FileModel result) {
+        StringBuilder resolution = new StringBuilder();
+        Directory directoryMp4 = metadata.getFirstDirectoryOfType(Mp4Directory.class);
+        if (directoryMp4 != null) {
+            final Integer seconds = directoryMp4.getInteger(Mp4Directory.TAG_DURATION_SECONDS);
+            int p1 = seconds % 60;
+            int p2 = seconds / 60;
+            int p3 = p2 % 60;
+            p2 = p2 / 60;
+            result.setDuration(String.format("%02d:%02d:%02d", p2, p3, p1));
+        }
+
+        Directory mp4VideoDirectory = metadata.getFirstDirectoryOfType(Mp4VideoDirectory.class);
+        if (mp4VideoDirectory != null) {
+            resolution.append(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_WIDTH));
+            resolution.append("x");
+            resolution.append(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_HEIGHT));
+            result.setResolution(resolution.toString());
+            result.setFrameRate(Integer.parseInt(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_FRAME_RATE)));
+            //result.setFrameRate(Integer.parseInt(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_COMPRESSOR_NAME)));
+            //System.out.println(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_COMPRESSOR_NAME));
+            result.setCompressionType(mp4VideoDirectory.getString(Mp4VideoDirectory.TAG_COMPRESSION_TYPE));
+        }
+        result.setMetadata(print(metadata, "Using MP4MetadataReader"));
     }
 
     /**

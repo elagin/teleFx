@@ -9,6 +9,8 @@ import java.util.List;
 
 public class FileModel {
 
+    private List<String> metadata;
+
     private SimpleIntegerProperty iso;
     private SimpleStringProperty name;
     private SimpleStringProperty resolution;
@@ -17,7 +19,10 @@ public class FileModel {
     private SimpleStringProperty exposure;
     private SimpleStringProperty altitude;
     private SimpleLongProperty size;
-    private List<String> metadata;
+
+    private SimpleIntegerProperty frameRate;
+    private SimpleStringProperty compressionType;
+    private SimpleStringProperty duration;
 
     public FileModel(String name, Long size) {
         this.iso = new SimpleIntegerProperty(0);
@@ -27,8 +32,35 @@ public class FileModel {
         this.fnumber = new SimpleStringProperty("");
         this.exposure = new SimpleStringProperty("");
         this.altitude = new SimpleStringProperty("");
+        this.compressionType = new SimpleStringProperty("");
+        this.duration = new SimpleStringProperty("");
         this.size = new SimpleLongProperty(size);
+        this.frameRate = new SimpleIntegerProperty(0);
         this.metadata = new ArrayList<>();
+    }
+
+    public String getDuration() {
+        return duration.get();
+    }
+
+    public void setDuration(String duration) {
+        this.duration.set(duration);
+    }
+
+    public String getCompressionType() {
+        return compressionType.get();
+    }
+
+    public void setCompressionType(String compressionType) {
+        this.compressionType.set(compressionType);
+    }
+
+    public int getFrameRate() {
+        return frameRate.get();
+    }
+
+    public void setFrameRate(int frameRate) {
+        this.frameRate.set(frameRate);
     }
 
     public String getAltitude() {

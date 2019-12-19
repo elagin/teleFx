@@ -28,11 +28,6 @@
             <columns>
                 <TableColumn fx:id="name" text="name"/>
                 <TableColumn fx:id="resolution" text="resolution"/>
-                <TableColumn fx:id="iso" text="ISO"/>
-                <TableColumn fx:id="pos" text="pos"/>
-                <TableColumn fx:id="altitude" text="altitude"/>
-                <TableColumn fx:id="exposure" text="exposure"/>
-                <TableColumn fx:id="fnumber" text="fnumber"/>
                 <TableColumn fx:id="size" text="size"/>
             </columns>
             <columnResizePolicy>

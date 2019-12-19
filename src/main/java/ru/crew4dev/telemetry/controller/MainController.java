@@ -25,9 +25,10 @@ import static ru.crew4dev.telemetry.Process.work;
 
 public class MainController implements Initializable {
 
-    private Preferences prefs;
-
     final String PREF_FOLDER_NAME = "folderName";
+
+    private Preferences prefs;
+    boolean isImages = false;
 
     @FXML
     private TextField folderName;
@@ -45,40 +46,56 @@ public class MainController implements Initializable {
     private TableView<FileModel> tbData;
 
     @FXML
-    public TableColumn<Object, Object> iso;
-
-    @FXML
     public TableColumn<Object, Object> name;
-
-    @FXML
-    public TableColumn<Object, Object> resolution;
-
-    @FXML
-    public TableColumn<Object, Object> pos;
-
-    @FXML
-    public TableColumn<Object, Object> fnumber;
 
     @FXML
     public TableColumn<Object, Object> size;
 
     @FXML
-    public TableColumn<Object, Object> exposure;
+    public TableColumn<Object, Object> resolution;
 
-    @FXML
-    public TableColumn<Object, Object> altitude;
+    //Images
+    public TableColumn iso;
+    public TableColumn pos;
+    public TableColumn fnumber;
+    public TableColumn exposure;
+    public TableColumn altitude;
+
+    //Movies
+    public TableColumn frameRate;
+    public TableColumn compressionType;
+    public TableColumn duration;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //make sure the property value factory should be exactly same as the e.g getIso from your model class
-        iso.setCellValueFactory(new PropertyValueFactory<>("iso"));
+        if (isImages) {
+            iso = new TableColumn("ISO");
+            pos = new TableColumn("pos");
+            altitude = new TableColumn("altitude");
+            exposure = new TableColumn("exposure");
+            fnumber = new TableColumn("fnumber");
+
+            //make sure the property value factory should be exactly same as the e.g getIso from your model class
+            iso.setCellValueFactory(new PropertyValueFactory<>("iso"));
+            pos.setCellValueFactory(new PropertyValueFactory<>("pos"));
+            fnumber.setCellValueFactory(new PropertyValueFactory<>("fnumber"));
+            exposure.setCellValueFactory(new PropertyValueFactory<>("exposure"));
+            altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
+        } else {
+            frameRate = new TableColumn("frameRate");
+            frameRate.setCellValueFactory(new PropertyValueFactory<>("frameRate"));
+
+            compressionType = new TableColumn("compressionType");
+            compressionType.setCellValueFactory(new PropertyValueFactory<>("compressionType"));
+
+            duration = new TableColumn("duration");
+            duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        }
+
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         resolution.setCellValueFactory(new PropertyValueFactory<>("resolution"));
-        pos.setCellValueFactory(new PropertyValueFactory<>("pos"));
-        fnumber.setCellValueFactory(new PropertyValueFactory<>("fnumber"));
         size.setCellValueFactory(new PropertyValueFactory<>("size"));
-        exposure.setCellValueFactory(new PropertyValueFactory<>("exposure"));
-        altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
         prefs = Preferences.userNodeForPackage(ru.crew4dev.telemetry.App.class);
         String folder = prefs.get(PREF_FOLDER_NAME, "");
         folderName.setText(folder);
@@ -103,13 +120,22 @@ public class MainController implements Initializable {
             }
         });
 
+        if (isImages)
+            tbData.getColumns().addAll(iso, pos, altitude, exposure, fnumber);
+        else
+            tbData.getColumns().addAll(frameRate, compressionType, duration);
+
         load();
     }
 
     public List<String> search(String folderName) {
         List<String> result = new ArrayList<>();
         if (!folderName.isEmpty()) {
-            final String pattern = ".*\\.jpg";
+            String pattern = "";
+            if (isImages)
+                pattern = ".*\\.jpg";
+            else
+                pattern = ".*\\.mp4";
             final File folder = new File(folderName);
             for (final File f : folder.listFiles()) {
                 if (f.isFile()) {
@@ -125,7 +151,6 @@ public class MainController implements Initializable {
     private void load() {
         ObservableList<FileModel> data = tbData.getItems();
         data.removeAll(data);
-
         // Set the value of the preference
         prefs.put(PREF_FOLDER_NAME, folderName.getText());
         List<String> files = search(folderName.getText());
