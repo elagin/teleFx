@@ -127,7 +127,6 @@ public class MainController implements Initializable {
             tbData.getColumns().addAll(iso, pos, altitude, exposure, fnumber);
         else
             tbData.getColumns().addAll(frameRate, compressionType, duration);
-
         load();
     }
 
@@ -140,10 +139,12 @@ public class MainController implements Initializable {
             else
                 pattern = ".*\\.mp4";
             final File folder = new File(folderName);
-            for (final File f : folder.listFiles()) {
-                if (f.isFile()) {
-                    if (f.getName().toLowerCase().matches(pattern)) {
-                        result.add(f.getAbsolutePath());
+            if (folder.listFiles() != null) {
+                for (final File f : folder.listFiles()) {
+                    if (f.isFile()) {
+                        if (f.getName().toLowerCase().matches(pattern)) {
+                            result.add(f.getAbsolutePath());
+                        }
                     }
                 }
             }
@@ -173,7 +174,9 @@ public class MainController implements Initializable {
         chooser.setTitle("JavaFX Projects");
         String folder = prefs.get(PREF_FOLDER_NAME, "");
         if (!folder.isEmpty()) {
-            chooser.setInitialDirectory(new File(folder));
+            File file = new File(folder);
+            if (file.exists())
+                chooser.setInitialDirectory(file);
         }
         File selectedDirectory = chooser.showDialog(buttonBrowse.getScene().getWindow());
         if (selectedDirectory != null) {

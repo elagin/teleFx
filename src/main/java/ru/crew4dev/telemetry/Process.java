@@ -204,7 +204,7 @@ public class Process {
             }
             // Each Directory may also contain error messages
             for (String error : directory.getErrors()) {
-                System.err.println("ERROR: " + error);
+                System.err.println("ERROR: " + error + " into " + directory.getName());
             }
         }
         return result;
